@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "27409736624",
+    "project_id": "meeting-app-a17a3",
+    "storage_bucket": "meeting-app-a17a3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27409736624:android:9e19dd93188dffd09aac75",
+        "android_client_info": {
+          "package_name": "com.example.meeting_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27409736624-q0jsh5s1fteiugbulqdh0a4b28e7635i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC413CA7xqgIioFYI8UGG39L-AJp2ErDyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27409736624-q0jsh5s1fteiugbulqdh0a4b28e7635i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
