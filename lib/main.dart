@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:meeting_app/resources/auth_methods.dart';
 import 'package:meeting_app/screens/home_screen.dart';
 import 'package:meeting_app/screens/login_screen.dart';
 import 'package:meeting_app/utils/colors.dart';
@@ -21,7 +22,18 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: backgroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: StreamBuilder(
+        stream: AuthMethods().authChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return HomeScreen();
+          }
+          return LoginScreen();
+        },
+      ),
       routes: {
         '/login': (context) => LoginScreen(),
         '/home': (context) => HomeScreen(),
