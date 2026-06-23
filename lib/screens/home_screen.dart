@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:meeting_app/screens/history_meeting_screen.dart';
+import 'package:meeting_app/screens/meeting_screen.dart';
 import 'package:meeting_app/utils/colors.dart';
-import 'package:meeting_app/widgets/home_meeting_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<Widget> pages = [
+    MeetingScreen(),
+    HistoryMeetingScreen(),
+    Text('Contacts'),
+    Text('Settings'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,44 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: backgroundColor,
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              HomeMeetingButton(
-                onPressed: () {},
-                icon: Icons.videocam,
-                text: 'New Meeting',
-              ),
-              HomeMeetingButton(
-                onPressed: () {},
-                icon: Icons.add_box_rounded,
-                text: 'Join Meeting',
-              ),
-              HomeMeetingButton(
-                onPressed: () {},
-                icon: Icons.calendar_today,
-                text: 'Schedule',
-              ),
-              HomeMeetingButton(
-                onPressed: () {},
-                icon: Icons.arrow_upward_rounded,
-                text: 'Share Screen',
-              ),
-            ],
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                'Create/Join Meetings',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: pages[_page],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: footerColor,
         selectedItemColor: Colors.white,
@@ -88,10 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined),
             label: 'Settings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.comment_bank),
-            label: 'Meet & chat',
           ),
         ],
       ),
