@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meeting_app/resources/auth_methods.dart';
 import 'package:meeting_app/screens/home_screen.dart';
 import 'package:meeting_app/screens/login_screen.dart';
+import 'package:meeting_app/screens/video_call_screen.dart';
 import 'package:meeting_app/utils/colors.dart';
 
 void main() async {
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginScreen(),
         '/home': (context) => HomeScreen(),
+        '/video-call': (context) => VideoCallScreen(),
       },
     );
   }

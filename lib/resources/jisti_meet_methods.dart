@@ -11,21 +11,39 @@ class JistiMeetMethods {
   }) async {
     try {
       var options = JitsiMeetConferenceOptions(
-        serverURL: "https://meet.jit.si",
         room: roomName,
         configOverrides: {
-          "startWithAudioMuted": false,
-          "startWithVideoMuted": false,
+          "startWithAudioMuted": true,
+          "startWithVideoMuted": true,
+          "prejoinPageEnabled": false,
+          "prejoinConfig.enabled": false,
         },
-        featureFlags: {"unsaferoomwarning.enabled": false},
+        featureFlags: {
+          "unsaferoomwarning.enabled": false,
+          FeatureFlags.preJoinPageEnabled: false,
+          FeatureFlags.welcomePageEnabled: false,
+          FeatureFlags.lobbyModeEnabled: false,
+        },
         userInfo: JitsiMeetUserInfo(
           displayName: _authMethods.user.displayName,
           email: _authMethods.user.email,
           avatar: _authMethods.user.photoURL,
         ),
       );
-     
-        await _jitsiMeetPlugin.join(options);
+
+      var listener = JitsiMeetEventListener(
+        conferenceJoined: (url) {
+          print("JOINED");
+        },
+        conferenceWillJoin: (url) {
+          print("WILL JOIN");
+        },
+        conferenceTerminated: (url, error) {
+          print(error);
+        },
+      );
+
+      await _jitsiMeetPlugin.join(options, listener);
     } catch (e) {
       print(e);
     }
