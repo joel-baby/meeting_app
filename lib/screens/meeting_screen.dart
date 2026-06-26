@@ -7,7 +7,7 @@ import 'package:meeting_app/widgets/home_meeting_button.dart';
 class MeetingScreen extends StatelessWidget {
   MeetingScreen({super.key});
 
-  final JistiMeetMethods _jistiMeetMethods = JistiMeetMethods();
+  final JitsiMeetMethods _jistiMeetMethods = JitsiMeetMethods();
 
   createNewMeeting() async {
     var random = Random();
@@ -42,12 +42,16 @@ class MeetingScreen extends StatelessWidget {
               text: 'Join Meeting',
             ),
             HomeMeetingButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/schedule');
+              },
               icon: Icons.calendar_today,
               text: 'Schedule',
             ),
             HomeMeetingButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/share');
+              },
               icon: Icons.arrow_upward_rounded,
               text: 'Share Screen',
             ),

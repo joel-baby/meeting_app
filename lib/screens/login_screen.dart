@@ -28,10 +28,10 @@ class _LoginScreenState extends State<LoginScreen> {
           CustomButton(
             text: 'Google Sign In',
             onPressed: () async {
-              bool res = await _authMethods.signInWithGoogle(context);
-              if (res) {
-                Navigator.pushNamed(context, '/home');
-              }
+              // The StreamBuilder in main.dart listens to authChanges and will
+              // automatically navigate to HomeScreen when sign-in succeeds.
+              // Do NOT manually push '/home' here — it creates a duplicate screen.
+              await _authMethods.signInWithGoogle(context);
             },
           ),
         ],

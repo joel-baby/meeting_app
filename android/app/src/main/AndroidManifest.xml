@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <application
         tools:replace="android:label"
-        android:label="meeting_app"
+        android:label="meet"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:meeting_app/resources/auth_methods.dart';
 import 'package:meeting_app/screens/home_screen.dart';
 import 'package:meeting_app/screens/login_screen.dart';
+import 'package:meeting_app/screens/schedule_screen.dart';
+import 'package:meeting_app/screens/share_screen.dart';
 import 'package:meeting_app/screens/video_call_screen.dart';
 import 'package:meeting_app/utils/colors.dart';
 
@@ -12,8 +14,22 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // All three are created ONCE so the StreamBuilder builder never hands Flutter
+  // a new widget instance on auth re-emissions (token refresh, app resume, etc.).
+  // If these were constructed inside the builder, Flutter would tear down and
+  // remount HomeScreen on every Firebase auth event, resetting all state.
+  late final Stream _authStream = AuthMethods().authChanges;
+  final _homeScreen = const HomeScreen();
+  final _loginScreen = const LoginScreen();
+  final _loading = const Center(child: CircularProgressIndicator());
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +40,23 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
-        stream: AuthMethods().authChanges,
+        stream: _authStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return _loading;
           }
           if (snapshot.hasData) {
-            return HomeScreen();
+            return _homeScreen;
           }
-          return LoginScreen();
+          return _loginScreen;
         },
       ),
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
-        '/video-call': (context) => VideoCallScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/video-call': (context) => const VideoCallScreen(),
+        '/schedule': (context) => const ScheduleScreen(),
+        '/share': (context) => const ShareScreen(),
       },
     );
   }

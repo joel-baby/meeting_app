@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
 import 'package:meeting_app/resources/auth_methods.dart';
 import 'package:meeting_app/resources/jisti_meet_methods.dart';
 import 'package:meeting_app/utils/colors.dart';
 import 'package:meeting_app/widgets/meeting_option.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallScreen extends StatefulWidget {
   const VideoCallScreen({super.key});
@@ -17,7 +17,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   late TextEditingController meetingIdController;
   late TextEditingController nameController;
 
-  final JistiMeetMethods _jistiMeetMethods = JistiMeetMethods();
+  final JitsiMeetMethods _jistiMeetMethods = JitsiMeetMethods();
 
   bool isAudioMuted = true;
   bool isVideoMuted = true;
@@ -36,7 +36,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     nameController.dispose();
   }
 
-  _joinMeeting() {
+  _joinMeeting() async {
+    await Permission.microphone.request();
+
     _jistiMeetMethods.createMeeting(
       roomName: meetingIdController.text,
       isAudioMuted: isAudioMuted,

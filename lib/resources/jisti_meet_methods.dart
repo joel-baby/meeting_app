@@ -1,68 +1,73 @@
 import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
 import 'package:meeting_app/resources/auth_methods.dart';
+import 'package:meeting_app/resources/firestore_methods.dart';
 
-class JistiMeetMethods {
+class JitsiMeetMethods {
   final AuthMethods _authMethods = AuthMethods();
-  final _jitsiMeetPlugin = JitsiMeet();
-  void createMeeting({
+  final FirestoreMethods _firestoreMethods = FirestoreMethods();
+  final JitsiMeet _jitsiMeet = JitsiMeet();
+
+  Future<void> createMeeting({
     required String roomName,
     required bool isAudioMuted,
     required bool isVideoMuted,
-    String username = '',
+    String? username,
   }) async {
     try {
-      String name;
-      if (username.isEmpty) {
-        name = _authMethods.user.displayName!;
-      } else {
-        name = username;
-      }
+      final user = _authMethods.user;
 
-      var options = JitsiMeetConferenceOptions(
+      final options = JitsiMeetConferenceOptions(
         serverURL: 'https://meet.ffmuc.net/',
         room: roomName,
         configOverrides: {
-          "startWithAudioMuted": true,
-          "startWithVideoMuted": true,
+          "startWithAudioMuted": isAudioMuted,
+          "startWithVideoMuted": isVideoMuted,
           "prejoinPageEnabled": false,
           "prejoinConfig.enabled": false,
         },
         featureFlags: {
-          "unsaferoomwarning.enabled": false,
           FeatureFlags.preJoinPageEnabled: false,
           FeatureFlags.welcomePageEnabled: false,
           FeatureFlags.lobbyModeEnabled: false,
+          FeatureFlags.unsafeRoomWarningEnabled: false,
         },
         userInfo: JitsiMeetUserInfo(
-          displayName: name,
-          email: _authMethods.user.email,
-          avatar: _authMethods.user.photoURL,
+          displayName: (username == null || username.trim().isEmpty)
+              ? user.displayName
+              : username,
+          email: user.email,
+          avatar: user.photoURL,
         ),
       );
 
-      var listener = JitsiMeetEventListener(
-        conferenceJoined: (url) {
-          print("JOINED");
-        },
+      final listener = JitsiMeetEventListener(
         conferenceWillJoin: (url) {
-          print("WILL JOIN");
+        },
+        conferenceJoined: (url) async {
+          await _firestoreMethods.addToMeetingHistory(roomName);
         },
         conferenceTerminated: (url, error) {
-          print(error);
+          if (error != null) {
+            print(error);
+          }
         },
       );
 
-      await _jitsiMeetPlugin.join(options, listener);
+      await _jitsiMeet.join(options, listener);
     } catch (e) {
-      print(e);
+      print('Jitsi Error: $e');
     }
+  }
 
-    Future<void> setAudioMuted(bool muted) async {
-      await _jitsiMeetPlugin.setAudioMuted(muted);
-    }
+  Future<void> setAudioMuted(bool muted) async {
+    await _jitsiMeet.setAudioMuted(muted);
+  }
 
-    Future<void> setVideoMuted(bool muted) async {
-      await _jitsiMeetPlugin.setVideoMuted(muted);
-    }
+  Future<void> setVideoMuted(bool muted) async {
+    await _jitsiMeet.setVideoMuted(muted);
+  }
+
+  Future<void> hangUp() async {
+    await _jitsiMeet.hangUp();
   }
 }
